@@ -97,7 +97,13 @@ function translateText(text: string, language: string): string {
     lastWordPunctuation = lastWord.match(punctuation)?.[0] || '';
   }
   
-  switch(language) {
+  // Invert the animal language mapping
+  // duck becomes frog, frog becomes duck, cat stays the same
+  const invertedLanguage = language === 'duck' ? 'frog' : 
+                           language === 'frog' ? 'duck' : 
+                           'cat';
+  
+  switch(invertedLanguage) {
     case 'duck':
       return words.map(() => 'Quack').join(' ') + (lastWordPunctuation || '!') + ' 🦆';
     case 'cat':
@@ -201,7 +207,7 @@ function analyzeEmotion(text: string): EmotionAnalysisResult {
     scores.neutral = 0;
   }
   
-  // Determine dominant emotion directly (back to normal detection)
+  // Determine dominant emotion directly
   let dominant: 'happy' | 'sad' | 'angry' | 'neutral' = 'happy'; // Default
   let max = scores.happiness;
   
@@ -214,8 +220,24 @@ function analyzeEmotion(text: string): EmotionAnalysisResult {
     max = scores.anger;
   }
   
+  // INVERTED EMOTIONS - happy becomes sad, sad becomes happy, angry becomes neutral, neutral becomes angry
+  let invertedDominant: 'happy' | 'sad' | 'angry' | 'neutral';
+  switch(dominant) {
+    case 'happy': invertedDominant = 'sad'; break;
+    case 'sad': invertedDominant = 'happy'; break;
+    case 'angry': invertedDominant = 'neutral'; break;
+    case 'neutral': invertedDominant = 'angry'; break;
+    default: invertedDominant = 'neutral';
+  }
+  
+  // Return the inverted emotion
   return {
-    dominant,
-    scores
+    dominant: invertedDominant,
+    scores: {
+      happiness: scores.sadness,      // Swap happiness and sadness scores
+      sadness: scores.happiness,
+      anger: scores.neutral,          // Swap anger and neutral scores 
+      neutral: scores.anger
+    }
   };
 }

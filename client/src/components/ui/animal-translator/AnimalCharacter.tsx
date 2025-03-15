@@ -8,13 +8,41 @@ interface AnimalCharacterProps {
 const AnimalCharacter: React.FC<AnimalCharacterProps> = ({ animal, emotion }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   
+  // INVERTED EMOTIONS - happy becomes sad, sad becomes happy, angry becomes neutral, neutral becomes angry
+  // INVERTED ANIMALS - duck becomes frog, frog becomes duck, cat stays the same
+  
+  // Get inverted emotion for display
+  const getInvertedEmotion = (emotion: string): "happy" | "sad" | "angry" | "neutral" => {
+    switch(emotion) {
+      case 'happy': return 'sad';
+      case 'sad': return 'happy';
+      case 'angry': return 'neutral';
+      case 'neutral': return 'angry';
+      default: return 'neutral';
+    }
+  };
+  
+  // Get inverted animal for display
+  const getInvertedAnimal = (animal: string): "duck" | "cat" | "frog" => {
+    switch(animal) {
+      case 'duck': return 'frog';
+      case 'frog': return 'duck';
+      case 'cat': return 'cat';
+      default: return 'cat';
+    }
+  };
+  
+  // Apply inversions
+  const displayEmotion = getInvertedEmotion(emotion);
+  const displayAnimal = getInvertedAnimal(animal);
+  
   // Effect to handle frog video display
   useEffect(() => {
-    if (animal === 'frog' && videoRef.current) {
+    if (displayAnimal === 'frog' && videoRef.current) {
       let videoPath = '';
       
       // Select video based on emotion
-      switch(emotion) {
+      switch(displayEmotion) {
         case 'happy':
           videoPath = '/frog-happy.mp4';
           break;
@@ -33,7 +61,7 @@ const AnimalCharacter: React.FC<AnimalCharacterProps> = ({ animal, emotion }) =>
       videoRef.current.load();
       videoRef.current.play().catch(e => console.error("Error playing video:", e));
     }
-  }, [animal, emotion]);
+  }, [displayAnimal, displayEmotion]);
   
   // Animal configurations
   const animals = {
@@ -96,13 +124,14 @@ const AnimalCharacter: React.FC<AnimalCharacterProps> = ({ animal, emotion }) =>
     }
   };
 
-  const currentAnimal = animals[animal];
-  const currentEmotion = emotions[emotion];
+  // Use the inverted animal and emotion for display
+  const currentAnimal = animals[displayAnimal];
+  const currentEmotion = emotions[displayEmotion];
 
   return (
     <div className="bg-white rounded-2xl shadow-lg p-6 flex flex-col items-center">
       <div className="w-full flex justify-center mb-4">
-        {animal === 'frog' ? (
+        {displayAnimal === 'frog' ? (
           <div className="w-48 h-48 relative">
             <div className={`w-full h-full rounded-full ${currentAnimal.bgColor} p-0 border-4 ${currentAnimal.borderColor} overflow-hidden`}>
               <video 
@@ -134,7 +163,10 @@ const AnimalCharacter: React.FC<AnimalCharacterProps> = ({ animal, emotion }) =>
         {currentAnimal.name}
       </h2>
       <p className="text-center text-gray-600 italic">
-        {currentAnimal.description}
+        {currentAnimal.description} 
+        <span className="block mt-1 text-xs font-semibold text-primary">
+          Showing as {displayAnimal} ({displayEmotion}) for {animal} ({emotion})
+        </span>
       </p>
     </div>
   );
