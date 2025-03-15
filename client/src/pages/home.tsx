@@ -77,35 +77,25 @@ export default function Home() {
       return;
     }
     
-    // For duck and cat, use appropriate sound based on emotion
-    if (language === 'duck' || language === 'cat') {
-      // Calculate number of sounds based on text length (minimum of 2, maximum of 10)
-      const wordCount = translationResult.translatedText.split(' ').length;
-      const soundCount = Math.max(2, Math.min(Math.ceil(wordCount / 2), 10));
-      
-      // Play the appropriate animal sound based on emotion
-      playAnimalSound(language, translationResult.emotion.dominant, soundCount);
-    } else {
-      // For frog, use the text-to-speech
-      speak(translationResult.translatedText, language, translationResult.emotion.dominant);
-    }
+    // For all animals, use the actual animal sounds
+    // Calculate number of sounds based on text length (minimum of 2, maximum of 10)
+    const wordCount = translationResult.translatedText.split(' ').length;
+    const soundCount = Math.max(2, Math.min(Math.ceil(wordCount / 2), 10));
+    
+    // Play the animal sound based on emotion and the selected animal
+    playAnimalSound(language, translationResult.emotion.dominant, soundCount);
   };
   
   // Handle play again button click
   const handlePlayAgain = () => {
     if (translationResult) {
-      // For duck and cat, use appropriate sound based on emotion
-      if (language === 'duck' || language === 'cat') {
-        // Calculate number of sounds based on text length (minimum of 2, maximum of 10)
-        const wordCount = translationResult.translatedText.split(' ').length;
-        const soundCount = Math.max(2, Math.min(Math.ceil(wordCount / 2), 10));
-        
-        // Play the appropriate animal sound based on emotion
-        playAnimalSound(language, translationResult.emotion.dominant, soundCount);
-      } else {
-        // For frog, use the text-to-speech
-        speak(translationResult.translatedText, language, translationResult.emotion.dominant);
-      }
+      // For all animals, use the actual animal sounds
+      // Calculate number of sounds based on text length (minimum of 2, maximum of 10)
+      const wordCount = translationResult.translatedText.split(' ').length;
+      const soundCount = Math.max(2, Math.min(Math.ceil(wordCount / 2), 10));
+      
+      // Play the animal sound based on emotion and the selected animal
+      playAnimalSound(language, translationResult.emotion.dominant, soundCount);
     }
   };
 
