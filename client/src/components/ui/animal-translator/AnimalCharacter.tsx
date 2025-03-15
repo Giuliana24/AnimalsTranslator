@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 
 interface AnimalCharacterProps {
   animal: "duck" | "cat" | "frog";
@@ -6,6 +6,35 @@ interface AnimalCharacterProps {
 }
 
 const AnimalCharacter: React.FC<AnimalCharacterProps> = ({ animal, emotion }) => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  
+  // Effect to handle frog video display
+  useEffect(() => {
+    if (animal === 'frog' && videoRef.current) {
+      let videoPath = '';
+      
+      // Select video based on emotion
+      switch(emotion) {
+        case 'happy':
+          videoPath = '/frog-happy.mp4';
+          break;
+        case 'sad':
+          videoPath = '/frog-sad.mp4';
+          break;
+        case 'angry':
+          videoPath = '/frog-angry.mp4';
+          break;
+        default:
+          videoPath = '/frog-happy.mp4'; // Default for neutral
+      }
+      
+      // Set the video source and play
+      videoRef.current.src = videoPath;
+      videoRef.current.load();
+      videoRef.current.play().catch(e => console.error("Error playing video:", e));
+    }
+  }, [animal, emotion]);
+  
   // Animal configurations
   const animals = {
     duck: {
@@ -73,14 +102,32 @@ const AnimalCharacter: React.FC<AnimalCharacterProps> = ({ animal, emotion }) =>
   return (
     <div className="bg-white rounded-2xl shadow-lg p-6 flex flex-col items-center">
       <div className="w-full flex justify-center mb-4">
-        <div className="w-48 h-48 relative">
-          <div className={`w-full h-full rounded-full ${currentAnimal.bgColor} p-3 border-4 ${currentAnimal.borderColor} overflow-hidden`}>
-            {currentAnimal.svg}
+        {animal === 'frog' ? (
+          <div className="w-48 h-48 relative">
+            <div className={`w-full h-full rounded-full ${currentAnimal.bgColor} p-0 border-4 ${currentAnimal.borderColor} overflow-hidden`}>
+              <video 
+                ref={videoRef} 
+                className="w-full h-full object-cover"
+                muted
+                autoPlay
+                loop
+                playsInline
+              />
+            </div>
+            <div className={`absolute -bottom-2 -right-2 ${currentEmotion.color} text-white rounded-full w-12 h-12 flex items-center justify-center border-4 border-white`}>
+              {currentEmotion.icon}
+            </div>
           </div>
-          <div className={`absolute -bottom-2 -right-2 ${currentEmotion.color} text-white rounded-full w-12 h-12 flex items-center justify-center border-4 border-white`}>
-            {currentEmotion.icon}
+        ) : (
+          <div className="w-48 h-48 relative">
+            <div className={`w-full h-full rounded-full ${currentAnimal.bgColor} p-3 border-4 ${currentAnimal.borderColor} overflow-hidden`}>
+              {currentAnimal.svg}
+            </div>
+            <div className={`absolute -bottom-2 -right-2 ${currentEmotion.color} text-white rounded-full w-12 h-12 flex items-center justify-center border-4 border-white`}>
+              {currentEmotion.icon}
+            </div>
           </div>
-        </div>
+        )}
       </div>
       
       <h2 className="text-3xl font-['Baloo_2'] font-bold text-primary mb-2">

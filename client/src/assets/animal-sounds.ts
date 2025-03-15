@@ -42,7 +42,7 @@ export function playAnimalSound(animal: AnimalType, emotion: AnimalEmotion, time
       break;
       
     case 'frog':
-      // No specific sounds for frog yet, will use text-to-speech
+      // For frog, we use videos with audio in AnimalCharacter component
       return;
   }
   
@@ -60,7 +60,7 @@ export function playAnimalSound(animal: AnimalType, emotion: AnimalEmotion, time
     }
   }
   
-  audio.play();
+  audio.play().catch(e => console.error(`Error playing audio: ${audioPath}`, e));
   if (times > 1) {
     audio.onended = playNext;
   }
