@@ -10,7 +10,7 @@ import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { TranslationResponse } from "@shared/schema";
 import { useTextToSpeech } from "@/hooks/use-text-to-speech";
-import { playDuckQuack } from "../assets/duck-quack";
+import { playDuckSound } from "../assets/duck-quack";
 
 export default function Home() {
   const { toast } = useToast();
@@ -77,16 +77,16 @@ export default function Home() {
       return;
     }
     
-    // Check if we have a happy duck - if so, play duck quack sound
-    if (language === 'duck' && translationResult.emotion.dominant === 'happy') {
-      // Calculate number of quacks based on text length (1 quack per 5 characters with minimum of 2)
+    // For duck language, use appropriate sound based on emotion
+    if (language === 'duck') {
+      // Calculate number of sounds based on text length (minimum of 2, maximum of 10)
       const wordCount = translationResult.translatedText.split(' ').length;
-      const quackCount = Math.max(2, Math.min(Math.ceil(wordCount / 2), 10));
+      const soundCount = Math.max(2, Math.min(Math.ceil(wordCount / 2), 10));
       
-      // Play the duck quack sound
-      playDuckQuack(quackCount);
+      // Play the appropriate duck sound based on emotion
+      playDuckSound(translationResult.emotion.dominant, soundCount);
     } else {
-      // Otherwise use the text-to-speech
+      // For other animals use the text-to-speech
       speak(translationResult.translatedText, language, translationResult.emotion.dominant);
     }
   };
@@ -94,16 +94,16 @@ export default function Home() {
   // Handle play again button click
   const handlePlayAgain = () => {
     if (translationResult) {
-      // Check if we have a happy duck - if so, play duck quack sound
-      if (language === 'duck' && translationResult.emotion.dominant === 'happy') {
-        // Calculate number of quacks based on text length (1 quack per 5 characters with minimum of 2)
+      // For duck language, use appropriate sound based on emotion
+      if (language === 'duck') {
+        // Calculate number of sounds based on text length (minimum of 2, maximum of 10)
         const wordCount = translationResult.translatedText.split(' ').length;
-        const quackCount = Math.max(2, Math.min(Math.ceil(wordCount / 2), 10));
+        const soundCount = Math.max(2, Math.min(Math.ceil(wordCount / 2), 10));
         
-        // Play the duck quack sound
-        playDuckQuack(quackCount);
+        // Play the appropriate duck sound based on emotion
+        playDuckSound(translationResult.emotion.dominant, soundCount);
       } else {
-        // Otherwise use the text-to-speech
+        // For other animals use the text-to-speech
         speak(translationResult.translatedText, language, translationResult.emotion.dominant);
       }
     }
