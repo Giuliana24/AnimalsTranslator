@@ -10,7 +10,7 @@ import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { TranslationResponse } from "@shared/schema";
 import { useTextToSpeech } from "@/hooks/use-text-to-speech";
-import { playDuckSound } from "../assets/duck-quack";
+import { playAnimalSound } from "../assets/animal-sounds";
 
 export default function Home() {
   const { toast } = useToast();
@@ -77,16 +77,16 @@ export default function Home() {
       return;
     }
     
-    // For duck language, use appropriate sound based on emotion
-    if (language === 'duck') {
+    // For duck and cat, use appropriate sound based on emotion
+    if (language === 'duck' || language === 'cat') {
       // Calculate number of sounds based on text length (minimum of 2, maximum of 10)
       const wordCount = translationResult.translatedText.split(' ').length;
       const soundCount = Math.max(2, Math.min(Math.ceil(wordCount / 2), 10));
       
-      // Play the appropriate duck sound based on emotion
-      playDuckSound(translationResult.emotion.dominant, soundCount);
+      // Play the appropriate animal sound based on emotion
+      playAnimalSound(language, translationResult.emotion.dominant, soundCount);
     } else {
-      // For other animals use the text-to-speech
+      // For frog, use the text-to-speech
       speak(translationResult.translatedText, language, translationResult.emotion.dominant);
     }
   };
@@ -94,16 +94,16 @@ export default function Home() {
   // Handle play again button click
   const handlePlayAgain = () => {
     if (translationResult) {
-      // For duck language, use appropriate sound based on emotion
-      if (language === 'duck') {
+      // For duck and cat, use appropriate sound based on emotion
+      if (language === 'duck' || language === 'cat') {
         // Calculate number of sounds based on text length (minimum of 2, maximum of 10)
         const wordCount = translationResult.translatedText.split(' ').length;
         const soundCount = Math.max(2, Math.min(Math.ceil(wordCount / 2), 10));
         
-        // Play the appropriate duck sound based on emotion
-        playDuckSound(translationResult.emotion.dominant, soundCount);
+        // Play the appropriate animal sound based on emotion
+        playAnimalSound(language, translationResult.emotion.dominant, soundCount);
       } else {
-        // For other animals use the text-to-speech
+        // For frog, use the text-to-speech
         speak(translationResult.translatedText, language, translationResult.emotion.dominant);
       }
     }
