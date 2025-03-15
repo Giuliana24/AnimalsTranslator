@@ -75,7 +75,7 @@ const EmotionDetection: React.FC<EmotionDetectionProps> = ({ emotion, isLoading 
             </div>
           </div>
           
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
             <EmotionBar 
               label="Happiness" 
               value={emotion.scores.happiness} 
@@ -90,11 +90,6 @@ const EmotionDetection: React.FC<EmotionDetectionProps> = ({ emotion, isLoading 
               label="Anger" 
               value={emotion.scores.anger} 
               color={emotionColors.angry}
-            />
-            <EmotionBar 
-              label="Neutral" 
-              value={emotion.scores.neutral} 
-              color={emotionColors.neutral}
             />
           </div>
         </>
