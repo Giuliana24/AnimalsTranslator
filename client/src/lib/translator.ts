@@ -118,46 +118,17 @@ export function analyzeEmotion(text: string): EmotionAnalysisResult {
     scores.neutral = 0;
   }
   
-  // Determine dominant emotion first
-  let actualDominant: 'happy' | 'sad' | 'angry' | 'neutral' = 'happy'; // Default
+  // Determine dominant emotion directly (back to normal detection)
+  let dominant: 'happy' | 'sad' | 'angry' | 'neutral' = 'happy'; // Default
   let max = scores.happiness;
   
   if (scores.sadness > max) {
-    actualDominant = 'sad';
+    dominant = 'sad';
     max = scores.sadness;
   }
   if (scores.anger > max) {
-    actualDominant = 'angry';
+    dominant = 'angry';
     max = scores.anger;
-  }
-  
-  // Now contradict the emotion (reverse it)
-  let dominant: 'happy' | 'sad' | 'angry' | 'neutral';
-  
-  if (actualDominant === 'happy') {
-    dominant = 'angry';  // Happy becomes angry
-    scores = {
-      happiness: 10,
-      sadness: 5,
-      anger: 85,
-      neutral: 0
-    };
-  } else if (actualDominant === 'sad') {
-    dominant = 'happy';  // Sad becomes happy
-    scores = {
-      happiness: 85,
-      sadness: 10,
-      anger: 5,
-      neutral: 0
-    };
-  } else {
-    dominant = 'sad';    // Angry becomes sad
-    scores = {
-      happiness: 5,
-      sadness: 85,
-      anger: 10,
-      neutral: 0
-    };
   }
   
   return {

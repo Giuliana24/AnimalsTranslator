@@ -10,6 +10,7 @@ import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { TranslationResponse } from "@shared/schema";
 import { useTextToSpeech } from "@/hooks/use-text-to-speech";
+import { playDuckQuack } from "../assets/duck-quack";
 
 export default function Home() {
   const { toast } = useToast();
@@ -76,14 +77,35 @@ export default function Home() {
       return;
     }
     
-    // Speak the translated text
-    speak(translationResult.translatedText, language, translationResult.emotion.dominant);
+    // Check if we have a happy duck - if so, play duck quack sound
+    if (language === 'duck' && translationResult.emotion.dominant === 'happy') {
+      // Calculate number of quacks based on text length (1 quack per 5 characters with minimum of 2)
+      const wordCount = translationResult.translatedText.split(' ').length;
+      const quackCount = Math.max(2, Math.min(Math.ceil(wordCount / 2), 10));
+      
+      // Play the duck quack sound
+      playDuckQuack(quackCount);
+    } else {
+      // Otherwise use the text-to-speech
+      speak(translationResult.translatedText, language, translationResult.emotion.dominant);
+    }
   };
   
   // Handle play again button click
   const handlePlayAgain = () => {
     if (translationResult) {
-      speak(translationResult.translatedText, language, translationResult.emotion.dominant);
+      // Check if we have a happy duck - if so, play duck quack sound
+      if (language === 'duck' && translationResult.emotion.dominant === 'happy') {
+        // Calculate number of quacks based on text length (1 quack per 5 characters with minimum of 2)
+        const wordCount = translationResult.translatedText.split(' ').length;
+        const quackCount = Math.max(2, Math.min(Math.ceil(wordCount / 2), 10));
+        
+        // Play the duck quack sound
+        playDuckQuack(quackCount);
+      } else {
+        // Otherwise use the text-to-speech
+        speak(translationResult.translatedText, language, translationResult.emotion.dominant);
+      }
     }
   };
 
